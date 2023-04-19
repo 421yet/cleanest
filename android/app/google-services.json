@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1040660131401",
+    "firebase_url": "https://sunshine-cleanest-default-rtdb.firebaseio.com",
+    "project_id": "sunshine-cleanest",
+    "storage_bucket": "sunshine-cleanest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040660131401:android:dd7c2fa63aad13b19b9998",
+        "android_client_info": {
+          "package_name": "com.google.obligatoryofficiality.sunshine_cleanest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040660131401-9o983c4sjk28mndl7r3fdaoc5qbaeheu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUBXnrg7SV107VCcNiH4TsazCH-61HCdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040660131401-9o983c4sjk28mndl7r3fdaoc5qbaeheu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1040660131401-96qp5ivss7jg3tmbqq70jqd2j30kbdo9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.google.obligatoryofficiality.sunshineCleanest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

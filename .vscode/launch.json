@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "sunshine_cleanest",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "sunshine_cleanest (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "sunshine_cleanest (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {   "name": "sonnim",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5556",
+        },
+        {
+            "name": "sajangnim",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5558"
+        }
+    ]
+}
