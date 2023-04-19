@@ -62,6 +62,7 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
                 ),
               ),
       ),
+      OutlinedButton(onPressed: () {}, child: const Text("FAQs")),
       OutlinedButton(
         onPressed: () {
           // TODO: Write about myself
@@ -69,19 +70,18 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
         },
         child: const Text("About"),
       ),
-      OutlinedButton(
-        onPressed: (!widget.currentUser.userExists())
-            ? null
-            : () {
-                setState(() {
-                  FirebaseAuth.instance.signOut();
-                  widget.currentUser.logOut();
-                });
-                widget.onResult(widget.currentUser);
-                Navigator.pop(context, widget.currentUser);
-              },
-        child: const Text("Sign Out"),
-      )
+      if (widget.currentUser.userExists())
+        OutlinedButton(
+          onPressed: () {
+            setState(() {
+              FirebaseAuth.instance.signOut();
+              widget.currentUser.logOut();
+            });
+            widget.onResult(widget.currentUser);
+            Navigator.pop(context, widget.currentUser);
+          },
+          child: const Text("Sign Out"),
+        )
     ];
 
     return Drawer(
