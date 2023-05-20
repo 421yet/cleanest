@@ -1,5 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sunshine_cleanest/chat_room.dart';
 import 'package:sunshine_cleanest/constants.dart';
 import 'package:sunshine_cleanest/view_notifs.dart';
@@ -93,6 +95,7 @@ class _BasketState extends State<Basket> {
         });
       }
     } else {
+      // user exists
       if (mounted) {
         FirebaseAuth.instance.authStateChanges().listen((User? user) {
           if (user == null) {
@@ -104,7 +107,13 @@ class _BasketState extends State<Basket> {
           }
         });
       }
+    } // resolve login (for some reason)
+    DatabaseReference requestRef = FirebaseDatabase.instance.ref('Sonnims');
+    if (widget.currentUser.userExists()) {
+      String uid = widget.currentUser.getUser()!.uid;
+      requestRef = requestRef.child(uid).child('request');
     }
+    // REDUNDANT?
     return Scaffold(
         appBar: AppBar(
             title: FutureBuilder<String>(
@@ -152,41 +161,8 @@ class _BasketState extends State<Basket> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      // backgroundColor: appPalette.mainColor,
-                      // side: BorderSide(width: 5, color: appPalette.mainColor),
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(0),
-                      fixedSize: const Size(200, 200)),
-                  onPressed: () {},
-                  // child: ,
-                  child: Ink(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(colors: [
-                        Colors.yellowAccent,
-                        Colors.yellow,
-                        Colors.lightBlue.withAlpha(16)
-                      ], radius: .5),
-                      shape: BoxShape.circle,
-                    ),
-                    // child: Image.asset(
-                    //   "assets/basket_edit.png",
-                    //   scale: 5,
-                    //   // opacity: const AlwaysStoppedAnimation(67),
-                    //   filterQuality: FilterQuality.high,
-                    // ),
-                    child: const Icon(Icons.airport_shuttle_rounded,
-                        size: 100, color: Colors.black),
-                  ),
-                ),
-              ),
               // Padding(
               //   padding: const EdgeInsets.all(8),
               //   child: Row(
@@ -284,52 +260,140 @@ class _BasketState extends State<Basket> {
               //     }).toList(),
               //   ),
               // ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 8, right: 8, top: 40, bottom: 1),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(250, 36),
-                      side: BorderSide(color: DEFAULT_BGwHILITE)),
-                  onPressed: (!widget.currentUser.userExists())
-                      ? null
-                      : () {
-                          confirmDays(context, widget.currentUser);
-                        },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
-                      Text("View "),
-                      Text("Existing",
-                          style: TextStyle(fontWeight: FontWeight.w900)),
-                      Text(" Pickup Requests")
-                    ],
+              if (widget.currentUser.userExists())
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: DEFAULT_BGwHILITE,
+                      borderRadius: BorderRadius.circular(25),
+                      // border: Border.all(color: DEFAULT_BORDER),
+                    ),
+                    child: FutureBuilder<DatabaseEvent>(
+                      future: requestRef.once(DatabaseEventType.value),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          DatabaseEvent event = snapshot.data!;
+                          String date = event.snapshot.value as String;
+                          String pickupDay = "";
+                          String pickupDateMonth = "";
+                          if (date.isEmpty) {
+                            return const Text("No pickup request");
+                          } else {
+                            DateTime pickupDate = DateTime.parse(date);
+                            pickupDay = DateFormat('EEEE').format(pickupDate);
+                            pickupDateMonth =
+                                DateFormat('yMMMMd').format(pickupDate);
+                          }
+                          return Column(
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const <Widget>[
+                                  Text("Pickup request scheduled for")
+                                ],
+                              ),
+                              Text(pickupDay,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    // fontWeight: FontWeight.bold,
+                                  )),
+                              Text(pickupDateMonth,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    // fontWeight: FontWeight.bold,
+                                  ))
+                            ],
+                          );
+                        } else {
+                          return const Text("Error fetching pickup request.");
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        // backgroundColor: appPalette.mainColor,
+                        // side: BorderSide(width: 5, color: appPalette.mainColor),
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(0),
+                        fixedSize: const Size(200, 200)),
+                    onPressed: (widget.currentUser.userExists())
+                        ? () {
+                            confirmDays(context, widget.currentUser);
+                            setState(() {});
+                          }
+                        : null,
+                    // child: ,
+                    child: Ink(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(colors: [
+                          Colors.yellowAccent,
+                          Colors.yellow,
+                          Colors.lightBlue.withAlpha(16)
+                        ], radius: .5),
+                        shape: BoxShape.circle,
+                      ),
+                      // child: Image.asset(
+                      //   "assets/basket_edit.png",
+                      //   scale: 5,
+                      //   // opacity: const AlwaysStoppedAnimation(67),
+                      //   filterQuality: FilterQuality.high,
+                      // ),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("REQUEST",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                    fontSize: 18)),
+                            Text("NEW",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                    fontSize: 18)),
+                            Text("PICKUP",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                    fontSize: 18)),
+                          ]),
+                    ),
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 8, right: 8, top: 1, bottom: 8),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(250, 36),
-                      side: BorderSide(color: DEFAULT_BGwHILITE)),
-                  onPressed: (!widget.currentUser.userExists())
-                      ? null
-                      : () {
-                          confirmDays(context, widget.currentUser);
-                        },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
-                      Text("Request "),
-                      Text("New",
-                          style: TextStyle(fontWeight: FontWeight.w900)),
-                      Text(" Pickup")
-                    ],
-                  ),
-                ),
-              )
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.only(left: 8, right: 8, top: 1, bottom: 8),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         minimumSize: const Size(250, 36),
+              //         side: BorderSide(color: DEFAULT_BGwHILITE)),
+              //     onPressed: (!widget.currentUser.userExists())
+              //         ? null
+              //         : () {
+              //             confirmDays(context, widget.currentUser);
+              //           },
+              //     child: Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       children: const <Widget>[
+              //         Text("Request "),
+              //         Text("New",
+              //             style: TextStyle(fontWeight: FontWeight.w900)),
+              //         Text(" Pickup")
+              //       ],
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),

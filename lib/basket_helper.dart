@@ -28,6 +28,8 @@ Future<AlertDialog> _checknWrite(
   String dateString = date.toString().split(' ')[0];
 
   DatabaseReference preRef = FirebaseDatabase.instance.ref('Requests');
+  DatabaseReference sonnimDateRef =
+      FirebaseDatabase.instance.ref('Sonnims').child(uid);
   DatabaseEvent preEvent = await preRef.once(DatabaseEventType.value);
   Map<String, dynamic> preRequests =
       jsonDecode(jsonEncode(preEvent.snapshot.value)) as Map<String, dynamic>;
@@ -90,6 +92,7 @@ Future<AlertDialog> _checknWrite(
       );
     } // request already exists
   } // date is already populated
+  await sonnimDateRef.update({'request': dateString});
   await preRef.update({uid: false});
 
   // now checking if DB actually updated . . .
