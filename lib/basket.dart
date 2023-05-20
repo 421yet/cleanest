@@ -159,9 +159,10 @@ class _BasketState extends State<Basket> {
           }
         }),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Padding(
               //   padding: const EdgeInsets.all(8),
@@ -261,60 +262,101 @@ class _BasketState extends State<Basket> {
               //   ),
               // ),
               if (widget.currentUser.userExists())
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: DEFAULT_BGwHILITE,
-                      borderRadius: BorderRadius.circular(25),
-                      // border: Border.all(color: DEFAULT_BORDER),
-                    ),
-                    child: FutureBuilder<DatabaseEvent>(
-                      future: requestRef.once(DatabaseEventType.value),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          DatabaseEvent event = snapshot.data!;
-                          String date = event.snapshot.value as String;
-                          String pickupDay = "";
-                          String pickupDateMonth = "";
-                          if (date.isEmpty) {
-                            return const Text("No pickup request");
-                          } else {
-                            DateTime pickupDate = DateTime.parse(date);
-                            pickupDay = DateFormat('EEEE').format(pickupDate);
-                            pickupDateMonth =
-                                DateFormat('yMMMMd').format(pickupDate);
-                          }
-                          return Column(
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const <Widget>[
-                                  Text("Pickup request scheduled for")
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Container(
+                        width: GET_MAX_WIDTH(context) * 9 / 10,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.25),
+                              spreadRadius: 3,
+                              blurRadius: 3,
+                              offset: const Offset(0, -3),
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          // border: Border.all(color: DEFAULT_BORDER),
+                        ),
+                        child: FutureBuilder<DatabaseEvent>(
+                          future: requestRef.once(DatabaseEventType.value),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              DatabaseEvent event = snapshot.data!;
+                              String date = event.snapshot.value as String;
+                              String pickupDay = "";
+                              String pickupDateMonth = "";
+                              if (date.isEmpty) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    const Text("No pickup request"),
+                                  ],
+                                );
+                              } else {
+                                DateTime pickupDate = DateTime.parse(date);
+                                pickupDay =
+                                    DateFormat('EEEE').format(pickupDate);
+                                pickupDateMonth =
+                                    DateFormat('yMMMMd').format(pickupDate);
+                              }
+                              return Column(
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const <Widget>[
+                                      Text("Next pickup scheduled for")
+                                    ],
+                                  ),
+                                  Text(pickupDay,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        // fontWeight: FontWeight.bold,
+                                      )),
+                                  Text(pickupDateMonth,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        // fontWeight: FontWeight.bold,
+                                      )),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: OutlinedButton(
+                                            onPressed: () {},
+                                            child: const Text("Delet Dis Req")),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: OutlinedButton(
+                                            onPressed: () {},
+                                            child: const Text(
+                                                "See Other Requests")),
+                                      )
+                                    ],
+                                  ),
                                 ],
-                              ),
-                              Text(pickupDay,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    // fontWeight: FontWeight.bold,
-                                  )),
-                              Text(pickupDateMonth,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    // fontWeight: FontWeight.bold,
-                                  ))
-                            ],
-                          );
-                        } else {
-                          return const Text("Error fetching pickup request.");
-                        }
-                      },
+                              );
+                            } else {
+                              return const Text(
+                                  "Error fetching pickup request.");
+                            }
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              Expanded(
+              Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: ElevatedButton(
@@ -411,8 +453,8 @@ class _BasketState extends State<Basket> {
                           }));
                         },
                   backgroundColor: (!widget.currentUser.userExists())
-                      ? Colors.grey.shade400
-                      : const FloatingActionButtonThemeData().backgroundColor,
+                      ? Colors.grey.shade400.withAlpha(128)
+                      : null,
                   tooltip: 'Chat with the Owner',
                   shape:
                       CircleBorder(side: BorderSide(color: DEFAULT_BGwHILITE)),

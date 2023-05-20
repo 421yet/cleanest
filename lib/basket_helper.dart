@@ -92,7 +92,12 @@ Future<AlertDialog> _checknWrite(
       );
     } // request already exists
   } // date is already populated
-  await sonnimDateRef.update({'request': dateString});
+  DatabaseEvent sonnimDateEvent = await sonnimDateRef.child('request').once();
+  String prevSonnimDate = sonnimDateEvent.snapshot.value as String;
+
+  if (prevSonnimDate.isEmpty || dateString.compareTo(prevSonnimDate) < 0) {
+    await sonnimDateRef.update({'request': dateString});
+  }
   await preRef.update({uid: false});
 
   // now checking if DB actually updated . . .
@@ -102,6 +107,13 @@ Future<AlertDialog> _checknWrite(
   Map postUids = jsonDecode(jsonEncode(postEvent.snapshot.value)) as Map;
   postUids.remove(null);
   if (postUids.keys.contains(uid)) {
+    currentUser.getName().then((String name) {
+      sendPushMessage(
+        'ffe0Ul-BTcmuiZXJZFf-Ug:APA91bEYGQg4d8EcFT8aZXmsziVXa7RWguw849guhAx0SfJLOCUZidWY_J5SbXtw5JoljH99-nWb1Stsgod6B69iF4hZ58_ScJNb7tFxnbnAZ1Hu-wMfToEcTlBvYNz1SlDKmsqjxhs4',
+        'New Pick-Up Request',
+        '$name has requested pick-up',
+      );
+    });
     return AlertDialog(
       title: const Text(
         'Hooray!',
@@ -297,15 +309,6 @@ Future<void> confirmDays(BuildContext context, CurrentUser currentUser) async {
                                           context, currentUser, then),
                                       builder: (context, snapshot) {
                                         if (snapshot.hasData) {
-                                          currentUser
-                                              .getName()
-                                              .then((String name) {
-                                            sendPushMessage(
-                                              'ffe0Ul-BTcmuiZXJZFf-Ug:APA91bEYGQg4d8EcFT8aZXmsziVXa7RWguw849guhAx0SfJLOCUZidWY_J5SbXtw5JoljH99-nWb1Stsgod6B69iF4hZ58_ScJNb7tFxnbnAZ1Hu-wMfToEcTlBvYNz1SlDKmsqjxhs4',
-                                              'New Pick-Up Request',
-                                              '$name has requested pick-up',
-                                            );
-                                          });
                                           return snapshot.data!;
                                         } else if (snapshot.hasError) {
                                           // print(snapshot.error);

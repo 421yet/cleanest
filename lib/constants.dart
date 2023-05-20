@@ -12,6 +12,10 @@ double GET_MAX_HEIGHT(BuildContext context) {
       MediaQuery.of(context).padding.vertical;
 }
 
+double GET_MAX_WIDTH(BuildContext context) {
+  return MediaQuery.of(context).size.width;
+}
+
 const String ADMIN_UID = "VB1lEL9YrHgOJukgiYjK30FIjD02";
 const String ADMIN_TOKEN =
     "ffe0Ul-BTcmuiZXJZFf-Ug:APA91bEYGQg4d8EcFT8aZXmsziVXa7RWguw849guhAx0SfJLOCU"
