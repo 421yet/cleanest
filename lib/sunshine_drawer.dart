@@ -1,5 +1,7 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sunshine_cleanest/constants.dart';
 
 import 'login.dart';
 import 'current_user.dart';
@@ -62,8 +64,13 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
                 ),
               ),
       ),
-      OutlinedButton(onPressed: () {}, child: const Text("FAQs")),
-      OutlinedButton(
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(elevation: 2),
+        onPressed: () {},
+        child: const Text("FAQs"),
+      ),
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(elevation: 2),
         onPressed: () {
           // TODO: Write about myself
           // Navigator.push()...
@@ -71,7 +78,11 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
         child: const Text("About"),
       ),
       if (widget.currentUser.userExists())
-        OutlinedButton(
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 2,
+            backgroundColor: CORNFLOWER_BLUE.darken(20),
+          ),
           onPressed: () {
             setState(() {
               FirebaseAuth.instance.signOut();
@@ -80,7 +91,10 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
             widget.onResult(widget.currentUser);
             Navigator.pop(context, widget.currentUser);
           },
-          child: const Text("Sign Out"),
+          child: const Text(
+            "Sign Out",
+            style: TextStyle(color: Colors.white),
+          ),
         )
     ];
 

@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 import 'package:sunshine_cleanest/chat_room.dart';
 import 'package:sunshine_cleanest/constants.dart';
@@ -114,7 +115,23 @@ class _BasketState extends State<Basket> {
       requestRef = requestRef.child(uid).child('request');
     }
     // REDUNDANT?
+    int nowHour = DateTime.now().hour;
+    int adaptiveAlpha = 255;
+    if (16 <= nowHour && nowHour <= 18) {
+      adaptiveAlpha = 192;
+    } else if (18 < nowHour && nowHour <= 20) {
+      adaptiveAlpha = 128;
+    } else if (20 < nowHour || nowHour <= 4) {
+      adaptiveAlpha = 64;
+    } else if (4 < nowHour && nowHour <= 6) {
+      adaptiveAlpha = 128;
+    } else if (6 < nowHour && nowHour <= 8) {
+      adaptiveAlpha = 192;
+    }
+
     return Scaffold(
+        backgroundColor: Color.fromARGB(
+            adaptiveAlpha, 100, 149, 237), // TODO extremely tentative
         appBar: AppBar(
             title: FutureBuilder<String>(
                 future: widget.currentUser.getName(),
@@ -158,242 +175,261 @@ class _BasketState extends State<Basket> {
             }
           }
         }),
-        body: Center(
-          child: Stack(
-            alignment: Alignment.topCenter,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Padding(
-              //   padding: const EdgeInsets.all(8),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: <Widget>[
-              //       Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: DropdownButtonHideUnderline(
-              //           child: DropdownButton<String>(
-              //             borderRadius: BorderRadius.circular(15),
-              //             menuMaxHeight: 200,
-              //             value: typeDD,
-              //             hint: const Text(
-              //               "Select care type",
-              //               style: TextStyle(color: Colors.black38),
-              //             ),
-              //             items: itemsList
-              //                 .map<DropdownMenuItem<String>>((String value) {
-              //               return DropdownMenuItem<String>(
-              //                 value: value,
-              //                 child: Text(value),
-              //               );
-              //             }).toList(),
-              //             onChanged: (String? newValue) {
-              //               if (mounted) {
-              //                 setState(() {
-              //                   typeDD = newValue;
-              //                 });
-              //               }
-              //             },
-              //           ),
-              //         ),
-              //       ),
-              //       OutlinedButton(
-              //           onPressed: (typeDD != null) ? _add2Basket : null,
-              //           child: const Text('Add to Basket')),
-              //     ],
-              //   ),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.all(2),
-              //   child: ListView(
-              //     padding: const EdgeInsets.all(1),
-              //     scrollDirection: Axis.vertical,
-              //     shrinkWrap: true,
-              //     children: widget.basket.entries.map((e) {
-              //       // TODO tidy this up (using Table widget?)
-              //       return Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Text(e.key),
-              //           Padding(
-              //             padding: const EdgeInsets.symmetric(horizontal: 16),
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.center,
-              //               children: <Widget>[
-              //                 SizedBox.square(
-              //                   dimension: 20,
-              //                   child: ElevatedButton(
-              //                     style: ElevatedButton.styleFrom(
-              //                         padding: EdgeInsets.zero),
-              //                     onPressed: _incrementLaundry,
-              //                     child: const Icon(Icons.add, size: 15),
-              //                   ),
-              //                 ),
-              //                 Padding(
-              //                   padding:
-              //                       const EdgeInsets.symmetric(horizontal: 8),
-              //                   child: Text(e.value.toString()),
-              //                 ),
-              //                 SizedBox.square(
-              //                   dimension: 20,
-              //                   child: ElevatedButton(
-              //                     style: ElevatedButton.styleFrom(
-              //                         padding: EdgeInsets.zero),
-              //                     onPressed:
-              //                         (e.value <= 1) ? null : _decrementLaundry,
-              //                     child: const Icon(Icons.remove, size: 15),
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ),
-              //           SizedBox.square(
-              //             dimension: 30,
-              //             child: ElevatedButton(
-              //               style: ElevatedButton.styleFrom(
-              //                   padding: EdgeInsets.zero),
-              //               onPressed: () => _deleteLaundry(e.key),
-              //               child: const Icon(Icons.delete, size: 20),
-              //             ),
-              //           ),
-              //         ],
-              //       );
-              //     }).toList(),
-              //   ),
-              // ),
-              if (widget.currentUser.userExists())
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Container(
-                        width: GET_MAX_WIDTH(context) * 9 / 10,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.25),
-                              spreadRadius: 3,
-                              blurRadius: 3,
-                              offset: const Offset(0, -3),
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                          // border: Border.all(color: DEFAULT_BORDER),
-                        ),
-                        child: FutureBuilder<DatabaseEvent>(
-                          future: requestRef.once(DatabaseEventType.value),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              DatabaseEvent event = snapshot.data!;
-                              String date = event.snapshot.value as String;
-                              String pickupDay = "";
-                              String pickupDateMonth = "";
-                              if (date.isEmpty) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    const Text("No pickup request"),
-                                  ],
-                                );
-                              } else {
-                                DateTime pickupDate = DateTime.parse(date);
-                                pickupDay =
-                                    DateFormat('EEEE').format(pickupDate);
-                                pickupDateMonth =
-                                    DateFormat('yMMMMd').format(pickupDate);
-                              }
-                              return Column(
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const <Widget>[
-                                      Text("Next pickup scheduled for")
-                                    ],
-                                  ),
-                                  Text(pickupDay,
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        // fontWeight: FontWeight.bold,
-                                      )),
-                                  Text(pickupDateMonth,
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        // fontWeight: FontWeight.bold,
-                                      )),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: OutlinedButton(
-                                            onPressed: () {},
-                                            child: const Text("Delet Dis Req")),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: OutlinedButton(
-                                            onPressed: () {},
-                                            child: const Text(
-                                                "See Other Requests")),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const Text(
-                                  "Error fetching pickup request.");
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+        body: Stack(
+          children: [
+            Positioned(
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.yellow,
+                      Colors.yellowAccent,
+                      CORNFLOWER_BLUE.withAlpha(adaptiveAlpha),
+                    ],
+                    radius: .33,
+                  ),
                 ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        // backgroundColor: appPalette.mainColor,
-                        // side: BorderSide(width: 5, color: appPalette.mainColor),
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(0),
-                        fixedSize: const Size(200, 200)),
-                    onPressed: (widget.currentUser.userExists())
-                        ? () {
-                            confirmDays(context, widget.currentUser);
-                            setState(() {});
-                          }
-                        : null,
-                    // child: ,
-                    child: Ink(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(colors: [
-                          Colors.yellowAccent,
-                          Colors.yellow,
-                          Colors.lightBlue.withAlpha(16)
-                        ], radius: .5),
-                        shape: BoxShape.circle,
+              ),
+            ),
+            Center(
+              child: Column(
+                // alignment: Alignment.topCenter,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       Padding(
+                  //         padding: const EdgeInsets.all(8.0),
+                  //         child: DropdownButtonHideUnderline(
+                  //           child: DropdownButton<String>(
+                  //             borderRadius: BorderRadius.circular(15),
+                  //             menuMaxHeight: 200,
+                  //             value: typeDD,
+                  //             hint: const Text(
+                  //               "Select care type",
+                  //               style: TextStyle(color: Colors.black38),
+                  //             ),
+                  //             items: itemsList
+                  //                 .map<DropdownMenuItem<String>>((String value) {
+                  //               return DropdownMenuItem<String>(
+                  //                 value: value,
+                  //                 child: Text(value),
+                  //               );
+                  //             }).toList(),
+                  //             onChanged: (String? newValue) {
+                  //               if (mounted) {
+                  //                 setState(() {
+                  //                   typeDD = newValue;
+                  //                 });
+                  //               }
+                  //             },
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       OutlinedButton(
+                  //           onPressed: (typeDD != null) ? _add2Basket : null,
+                  //           child: const Text('Add to Basket')),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(2),
+                  //   child: ListView(
+                  //     padding: const EdgeInsets.all(1),
+                  //     scrollDirection: Axis.vertical,
+                  //     shrinkWrap: true,
+                  //     children: widget.basket.entries.map((e) {
+                  //       // TODO tidy this up (using Table widget?)
+                  //       return Row(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text(e.key),
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //             child: Row(
+                  //               mainAxisAlignment: MainAxisAlignment.center,
+                  //               children: <Widget>[
+                  //                 SizedBox.square(
+                  //                   dimension: 20,
+                  //                   child: ElevatedButton(
+                  //                     style: ElevatedButton.styleFrom(
+                  //                         padding: EdgeInsets.zero),
+                  //                     onPressed: _incrementLaundry,
+                  //                     child: const Icon(Icons.add, size: 15),
+                  //                   ),
+                  //                 ),
+                  //                 Padding(
+                  //                   padding:
+                  //                       const EdgeInsets.symmetric(horizontal: 8),
+                  //                   child: Text(e.value.toString()),
+                  //                 ),
+                  //                 SizedBox.square(
+                  //                   dimension: 20,
+                  //                   child: ElevatedButton(
+                  //                     style: ElevatedButton.styleFrom(
+                  //                         padding: EdgeInsets.zero),
+                  //                     onPressed:
+                  //                         (e.value <= 1) ? null : _decrementLaundry,
+                  //                     child: const Icon(Icons.remove, size: 15),
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //           SizedBox.square(
+                  //             dimension: 30,
+                  //             child: ElevatedButton(
+                  //               style: ElevatedButton.styleFrom(
+                  //                   padding: EdgeInsets.zero),
+                  //               onPressed: () => _deleteLaundry(e.key),
+                  //               child: const Icon(Icons.delete, size: 20),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       );
+                  //     }).toList(),
+                  //   ),
+                  // ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.currentUser.userExists())
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 8),
+                          child: Container(
+                            width: GET_MAX_WIDTH(context) * 9 / 10,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.25),
+                                  spreadRadius: 1.5,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              // border: Border.all(color: DEFAULT_BORDER),
+                            ),
+                            child: FutureBuilder<DatabaseEvent>(
+                              future: requestRef.once(DatabaseEventType.value),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  DatabaseEvent event = snapshot.data!;
+                                  String date = event.snapshot.value as String;
+                                  String pickupDay = "";
+                                  String pickupDateMonth = "";
+                                  if (date.isEmpty) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text("No pickup request"),
+                                      ],
+                                    );
+                                  } else {
+                                    DateTime pickupDate = DateTime.parse(date);
+                                    pickupDay =
+                                        DateFormat('EEEE').format(pickupDate);
+                                    pickupDateMonth =
+                                        DateFormat('yMMMMd').format(pickupDate);
+                                  }
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: const <Widget>[
+                                          Text("Next pickup scheduled for")
+                                        ],
+                                      ),
+                                      Text(pickupDay,
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            // fontWeight: FontWeight.bold,
+                                          )),
+                                      Text(pickupDateMonth,
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            // fontWeight: FontWeight.bold,
+                                          )),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 8, top: 8),
+                                            child: NeumorphicButton(
+                                                style: NeumorphicStyle(
+                                                    boxShape: NeumorphicBoxShape
+                                                        .roundRect(BorderRadius
+                                                            .circular(50)),
+                                                    shape:
+                                                        NeumorphicShape.concave,
+                                                    color: Colors.white,
+                                                    lightSource:
+                                                        LightSource.top),
+                                                onPressed: () {},
+                                                child: const Text(
+                                                    "Cancel Pickup")),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8, top: 8),
+                                            child: NeumorphicButton(
+                                                style: NeumorphicStyle(
+                                                    boxShape: NeumorphicBoxShape
+                                                        .roundRect(BorderRadius
+                                                            .circular(50)),
+                                                    shape:
+                                                        NeumorphicShape.concave,
+                                                    color: Colors.white,
+                                                    lightSource:
+                                                        LightSource.top),
+                                                onPressed: () {},
+                                                child: const Text("See More")),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return const Text(
+                                      "Error fetching pickup request.");
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 6,
+                        backgroundColor: Colors.white,
+                        minimumSize: const Size(88, 48),
                       ),
-                      // child: Image.asset(
-                      //   "assets/basket_edit.png",
-                      //   scale: 5,
-                      //   // opacity: const AlwaysStoppedAnimation(67),
-                      //   filterQuality: FilterQuality.high,
-                      // ),
-                      child: Column(
+                      onPressed: (widget.currentUser.userExists())
+                          ? () {
+                              confirmDays(context, widget.currentUser);
+                              setState(() {});
+                            }
+                          : null,
+                      child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Text("REQUEST",
+                            Text("REQUEST ",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black,
@@ -403,7 +439,7 @@ class _BasketState extends State<Basket> {
                                     fontWeight: FontWeight.w900,
                                     color: Colors.black,
                                     fontSize: 18)),
-                            Text("PICKUP",
+                            Text(" PICKUP",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     color: Colors.black,
@@ -411,59 +447,33 @@ class _BasketState extends State<Basket> {
                           ]),
                     ),
                   ),
-                ),
+                ],
               ),
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.only(left: 8, right: 8, top: 1, bottom: 8),
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(
-              //         minimumSize: const Size(250, 36),
-              //         side: BorderSide(color: DEFAULT_BGwHILITE)),
-              //     onPressed: (!widget.currentUser.userExists())
-              //         ? null
-              //         : () {
-              //             confirmDays(context, widget.currentUser);
-              //           },
-              //     child: Row(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: const <Widget>[
-              //         Text("Request "),
-              //         Text("New",
-              //             style: TextStyle(fontWeight: FontWeight.w900)),
-              //         Text(" Pickup")
-              //       ],
-              //     ),
-              //   ),
-              // )
-            ],
-          ),
+            ),
+          ],
         ),
         floatingActionButton: Padding(
             padding: const EdgeInsets.all(8),
-            child: Container(
-                constraints: const BoxConstraints(minHeight: 75, minWidth: 75),
-                child: FloatingActionButton(
-                  onPressed: (!widget.currentUser.userExists())
-                      ? null
-                      : () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return const ChatRoom();
-                          }));
-                        },
-                  backgroundColor: (!widget.currentUser.userExists())
-                      ? Colors.grey.shade400.withAlpha(128)
-                      : null,
-                  tooltip: 'Chat with the Owner',
-                  shape:
-                      CircleBorder(side: BorderSide(color: DEFAULT_BGwHILITE)),
-                  enableFeedback: true,
-                  disabledElevation: 0,
-                  child: Icon(Icons.chat_rounded,
-                      color: (!widget.currentUser.userExists())
-                          ? Colors.black26
-                          : Colors.black),
-                ))));
+            child: FloatingActionButton(
+              onPressed: (!widget.currentUser.userExists())
+                  ? null
+                  : () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return const ChatRoom();
+                      }));
+                    },
+              backgroundColor: (!widget.currentUser.userExists())
+                  ? Colors.grey.shade400.withAlpha(128)
+                  : null,
+              tooltip: 'Chat with the Owner',
+              shape: CircleBorder(side: BorderSide(color: DEFAULT_BGwHILITE)),
+              enableFeedback: true,
+              disabledElevation: 0,
+              child: Icon(Icons.chat_rounded,
+                  color: (!widget.currentUser.userExists())
+                      ? Colors.black26
+                      : null),
+            )));
   }
 }
