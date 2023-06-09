@@ -178,17 +178,19 @@ class _BasketState extends State<Basket> {
         body: Stack(
           children: [
             Positioned(
+              // TODO: moving sun?
               child: Container(
                 height: 100,
                 width: 100,
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      Colors.yellow,
-                      Colors.yellowAccent,
+                      const Color.fromARGB(255, 255, 253, 184),
+                      const Color.fromARGB(255, 255, 255, 158),
                       CORNFLOWER_BLUE.withAlpha(adaptiveAlpha),
                     ],
                     radius: .33,
+                    focalRadius: 50,
                   ),
                 ),
               ),
@@ -199,103 +201,6 @@ class _BasketState extends State<Basket> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: <Widget>[
-                  //       Padding(
-                  //         padding: const EdgeInsets.all(8.0),
-                  //         child: DropdownButtonHideUnderline(
-                  //           child: DropdownButton<String>(
-                  //             borderRadius: BorderRadius.circular(15),
-                  //             menuMaxHeight: 200,
-                  //             value: typeDD,
-                  //             hint: const Text(
-                  //               "Select care type",
-                  //               style: TextStyle(color: Colors.black38),
-                  //             ),
-                  //             items: itemsList
-                  //                 .map<DropdownMenuItem<String>>((String value) {
-                  //               return DropdownMenuItem<String>(
-                  //                 value: value,
-                  //                 child: Text(value),
-                  //               );
-                  //             }).toList(),
-                  //             onChanged: (String? newValue) {
-                  //               if (mounted) {
-                  //                 setState(() {
-                  //                   typeDD = newValue;
-                  //                 });
-                  //               }
-                  //             },
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       OutlinedButton(
-                  //           onPressed: (typeDD != null) ? _add2Basket : null,
-                  //           child: const Text('Add to Basket')),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(2),
-                  //   child: ListView(
-                  //     padding: const EdgeInsets.all(1),
-                  //     scrollDirection: Axis.vertical,
-                  //     shrinkWrap: true,
-                  //     children: widget.basket.entries.map((e) {
-                  //       // TODO tidy this up (using Table widget?)
-                  //       return Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text(e.key),
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(horizontal: 16),
-                  //             child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: <Widget>[
-                  //                 SizedBox.square(
-                  //                   dimension: 20,
-                  //                   child: ElevatedButton(
-                  //                     style: ElevatedButton.styleFrom(
-                  //                         padding: EdgeInsets.zero),
-                  //                     onPressed: _incrementLaundry,
-                  //                     child: const Icon(Icons.add, size: 15),
-                  //                   ),
-                  //                 ),
-                  //                 Padding(
-                  //                   padding:
-                  //                       const EdgeInsets.symmetric(horizontal: 8),
-                  //                   child: Text(e.value.toString()),
-                  //                 ),
-                  //                 SizedBox.square(
-                  //                   dimension: 20,
-                  //                   child: ElevatedButton(
-                  //                     style: ElevatedButton.styleFrom(
-                  //                         padding: EdgeInsets.zero),
-                  //                     onPressed:
-                  //                         (e.value <= 1) ? null : _decrementLaundry,
-                  //                     child: const Icon(Icons.remove, size: 15),
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //           SizedBox.square(
-                  //             dimension: 30,
-                  //             child: ElevatedButton(
-                  //               style: ElevatedButton.styleFrom(
-                  //                   padding: EdgeInsets.zero),
-                  //               onPressed: () => _deleteLaundry(e.key),
-                  //               child: const Icon(Icons.delete, size: 20),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       );
-                  //     }).toList(),
-                  //   ),
-                  // ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
