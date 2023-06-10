@@ -3,7 +3,7 @@
    <application
         android:label="sunshine_cleanest"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@res/icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
