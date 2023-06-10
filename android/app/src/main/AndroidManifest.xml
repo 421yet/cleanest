@@ -3,7 +3,7 @@
    <application
         android:label="sunshine_cleanest"
         android:name="${applicationName}"
-        android:icon="@res/icon">
+        android:icon="@drawable/icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
