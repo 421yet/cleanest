@@ -30,13 +30,3 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-android {
-    namespace "com.frankworks.cleanest"
-    testNamespace "com.frankworks.testcleanest"
-    defaultConfig {
-        applicationID "com.frankworks.cleanest"
-        versionCode 0
-        versionName "0.1"
-    }
-}
