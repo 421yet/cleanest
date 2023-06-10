@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.obligatoryofficiality.sunshine_cleanest">
+    package="com.frankworks.cleanest">
    <application
         android:label="sunshine_cleanest"
         android:name="${applicationName}"

@@ -81,7 +81,7 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 2,
-            backgroundColor: CORNFLOWER_BLUE.darken(20),
+            backgroundColor: CORNFLOWER_BLUE.darken(),
           ),
           onPressed: () {
             setState(() {
