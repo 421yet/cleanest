@@ -1,4 +1,4 @@
-package com.google.obligatoryofficiality.sunshine_cleanest
+package com.frankworks.cleanest
 
 import io.flutter.embedding.android.FlutterActivity
 
