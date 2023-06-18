@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-Color CORNFLOWER_BLUE = Color.fromARGB(255, 100, 149, 237);
+Color CORNFLOWER_BLUE = const Color.fromARGB(255, 100, 149, 237);
 
 Color DEFAULT_FADEDTXT = Colors.black.withAlpha(192);
 Color DEFAULT_BORDER = Colors.black.withAlpha(128);

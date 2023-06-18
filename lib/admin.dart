@@ -76,9 +76,9 @@ class _AdminState extends State<Admin> {
                             MaterialPageRoute(
                                 builder: (context) => const CheckRequests()));
                       },
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Padding(
                             padding: EdgeInsets.all(4),
                             child: Icon(
@@ -104,9 +104,9 @@ class _AdminState extends State<Admin> {
                           style: ElevatedButton.styleFrom(
                               elevation: 3,
                               side: BorderSide(color: DEFAULT_BGwHILITE)),
-                          child: Column(
+                          child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.all(4),
                                 child: Icon(
@@ -141,9 +141,9 @@ class _AdminState extends State<Admin> {
                                 MaterialPageRoute(
                                     builder: (context) => const ViewNotifs()));
                           },
-                          child: Column(
+                          child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const <Widget>[
+                              children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.all(4),
                                   child: Icon(
@@ -171,9 +171,9 @@ class _AdminState extends State<Admin> {
                                     builder: (context) =>
                                         const ChatRoomsList()));
                           },
-                          child: Column(
+                          child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const <Widget>[
+                              children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.all(4),
                                   child: Icon(

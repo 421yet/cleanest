@@ -40,7 +40,7 @@ class MyApp extends StatefulWidget {
   );
 
   ThemeData themeData = ThemeData(
-    colorSchemeSeed: Color.fromARGB(255, 4, 130, 255),
+    colorSchemeSeed: const Color.fromARGB(255, 4, 130, 255),
     useMaterial3: true,
   );
 

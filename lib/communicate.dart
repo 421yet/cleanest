@@ -46,10 +46,10 @@ class _CommunicateState extends State<Communicate> {
                       children: <Widget>[
                         // TODO Alert Dialog style list of sonnims to whom message being sent? (NO EDIT)
                         Column(children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.only(
+                          const Padding(
+                              padding: EdgeInsets.only(
                                   left: 8, right: 8, top: 8),
-                              child: Row(children: const <Widget>[
+                              child: Row(children: <Widget>[
                                 Text(
                                   "Notification Title",
                                 )
@@ -68,10 +68,10 @@ class _CommunicateState extends State<Communicate> {
                                               BorderRadius.circular(15)))))
                         ]),
                         Column(children: [
-                          Padding(
-                              padding: const EdgeInsets.only(
+                          const Padding(
+                              padding: EdgeInsets.only(
                                   left: 8, right: 8, top: 8),
-                              child: Row(children: const <Widget>[
+                              child: Row(children: <Widget>[
                                 Text(
                                   "Detailed Message",
                                   textAlign: TextAlign.start,
@@ -109,7 +109,7 @@ class _CommunicateState extends State<Communicate> {
                                       content: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            Row(children: const <Widget>[
+                                            const Row(children: <Widget>[
                                               Text("Sending notifications is "),
                                               Text("irreversible",
                                                   style: TextStyle(

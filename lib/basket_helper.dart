@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sunshine_cleanest/constants.dart';
 import 'package:sunshine_cleanest/send_push_message.dart';
 // import 'package:flutter/foundation.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -321,10 +320,10 @@ Future<void> confirmDays(BuildContext context, CurrentUser currentUser) async {
                                                           FontStyle.italic,
                                                     ),
                                                   ),
-                                                  content: Column(
+                                                  content: const Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
-                                                    children: const <Widget>[
+                                                    children: <Widget>[
                                                       Text(
                                                           'There has been an error setting up your request. If this continues, please give us a call.'),
                                                     ],
@@ -338,7 +337,7 @@ Future<void> confirmDays(BuildContext context, CurrentUser currentUser) async {
                                                 )
                                               ]));
                                         } else {
-                                          return Dialog(
+                                          return const Dialog(
                                               backgroundColor:
                                                   Colors.transparent,
                                               child: Column(
@@ -346,7 +345,7 @@ Future<void> confirmDays(BuildContext context, CurrentUser currentUser) async {
                                                       MainAxisSize.min,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const <Widget>[
+                                                  children: <Widget>[
                                                     CircularProgressIndicator(
                                                       backgroundColor:
                                                           Colors.white,

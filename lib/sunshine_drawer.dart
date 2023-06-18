@@ -46,9 +46,9 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
                     ),
                   );
                 },
-                child: Column(
+                child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       "Sign In",
                       style: TextStyle(

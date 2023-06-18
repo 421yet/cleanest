@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:sunshine_cleanest/current_user.dart';
 import 'package:sunshine_cleanest/send_push_message.dart';
@@ -56,7 +55,7 @@ class _ChatRoomState extends State<ChatRoom> {
     double height = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.vertical;
 
-    double CHAT_HEIGHT = height * 8.22 / 10;
+    double chatHeight = height * 8.22 / 10;
     // double MESSAGE_HEIGHT = height - CHAT_HEIGHT;
 
     return Scaffold(
@@ -87,7 +86,7 @@ class _ChatRoomState extends State<ChatRoom> {
                           _chatLog = event.snapshot.value as List;
 
                           return ConstrainedBox(
-                            constraints: BoxConstraints(maxHeight: CHAT_HEIGHT),
+                            constraints: BoxConstraints(maxHeight: chatHeight),
                             child: ListView.builder(
                               reverse: true,
                               padding: const EdgeInsets.all(16),

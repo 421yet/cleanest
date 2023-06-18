@@ -155,10 +155,11 @@ class _CheckPickupDateState extends State<CheckPickupDate> {
                                                           );
                                                         });
                                                       }
-                                                      if (mounted)
+                                                      if (mounted) {
                                                         setState(() {
                                                           reqPair[uid] = false;
                                                         });
+                                                      }
                                                     },
                                                   );
                                                 } catch (e) {
@@ -211,9 +212,9 @@ class _CheckPickupDateState extends State<CheckPickupDate> {
                                       (widget.date.compareTo(weekAgo) > 0)
                                           ? null
                                           : () {},
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const <Widget>[
+                                    children: <Widget>[
                                       Icon(Icons.warning),
                                       Text(' Delete This Date'),
                                     ],
@@ -281,12 +282,12 @@ class _CheckPickupDateState extends State<CheckPickupDate> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          return SizedBox(
+          return const SizedBox(
             width: 60,
             height: 60,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
+              children: <Widget>[
                 CircularProgressIndicator(
                   backgroundColor: Colors.transparent,
                 )

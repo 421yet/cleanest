@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+// import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 import 'package:sunshine_cleanest/chat_room.dart';
 import 'package:sunshine_cleanest/constants.dart';
@@ -233,10 +233,10 @@ class _BasketState extends State<Basket> {
                                   String pickupDay = "";
                                   String pickupDateMonth = "";
                                   if (date.isEmpty) {
-                                    return Row(
+                                    return const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Text("No pickup request"),
                                       ],
                                     );
@@ -249,9 +249,9 @@ class _BasketState extends State<Basket> {
                                   }
                                   return Column(
                                     children: [
-                                      Row(
+                                      const Row(
                                         mainAxisSize: MainAxisSize.min,
-                                        children: const <Widget>[
+                                        children: <Widget>[
                                           Text("Next pickup scheduled for")
                                         ],
                                       ),
@@ -272,16 +272,16 @@ class _BasketState extends State<Basket> {
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 8, top: 8),
-                                            child: NeumorphicButton(
-                                                style: NeumorphicStyle(
-                                                    boxShape: NeumorphicBoxShape
-                                                        .roundRect(BorderRadius
-                                                            .circular(50)),
-                                                    shape:
-                                                        NeumorphicShape.concave,
-                                                    color: Colors.white,
-                                                    lightSource:
-                                                        LightSource.top),
+                                            child: ElevatedButton(
+                                                // style: NeumorphicStyle(
+                                                //     boxShape: NeumorphicBoxShape
+                                                //         .roundRect(BorderRadius
+                                                //             .circular(50)),
+                                                //     shape:
+                                                //         NeumorphicShape.concave,
+                                                //     color: Colors.white,
+                                                //     lightSource:
+                                                //         LightSource.top),
                                                 onPressed: () {},
                                                 child: const Text(
                                                     "Cancel Pickup")),
@@ -289,16 +289,16 @@ class _BasketState extends State<Basket> {
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8, top: 8),
-                                            child: NeumorphicButton(
-                                                style: NeumorphicStyle(
-                                                    boxShape: NeumorphicBoxShape
-                                                        .roundRect(BorderRadius
-                                                            .circular(50)),
-                                                    shape:
-                                                        NeumorphicShape.concave,
-                                                    color: Colors.white,
-                                                    lightSource:
-                                                        LightSource.top),
+                                            child: ElevatedButton(
+                                                // style: NeumorphicStyle(
+                                                //     boxShape: NeumorphicBoxShape
+                                                //         .roundRect(BorderRadius
+                                                //             .circular(50)),
+                                                //     shape:
+                                                //         NeumorphicShape.concave,
+                                                //     color: Colors.white,
+                                                //     lightSource:
+                                                //         LightSource.top),
                                                 onPressed: () {},
                                                 child: const Text("See More")),
                                           )
@@ -331,9 +331,9 @@ class _BasketState extends State<Basket> {
                               setState(() {});
                             }
                           : null,
-                      child: Row(
+                      child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text("REQUEST ",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
