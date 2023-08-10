@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sunshine_cleanest/constants.dart';
@@ -21,10 +22,11 @@ class _ViewNotifsState extends State<ViewNotifs> {
       appBar: AppBar(
         title: const Text("Notifications"),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: DEVICE_TOKEN,
-          )
+          if (kDebugMode)
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: DEVICE_TOKEN,
+            )
         ],
       ),
       body: FutureBuilder(

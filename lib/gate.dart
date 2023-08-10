@@ -1,7 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
@@ -13,6 +13,8 @@ import 'current_user.dart';
 import 'constants.dart';
 
 class Gate extends StatefulWidget {
+  final CurrentUser currentUser = const CurrentUser();
+
   const Gate({super.key});
 
   @override
@@ -20,7 +22,8 @@ class Gate extends StatefulWidget {
 }
 
 class _GateState extends State<Gate> {
-  CurrentUser currentUser = CurrentUser.vacant();
+  CurrentUser get currentUser => widget.currentUser;
+
   final FlutterLocalNotificationsPlugin flnp =
       FlutterLocalNotificationsPlugin();
 
@@ -29,17 +32,17 @@ class _GateState extends State<Gate> {
     // if (Platform.isIOS)
     super.initState();
     requestPermission();
-    if (!currentUser.userExists()) {
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        if (user != null) {
-          if (mounted) {
-            setState(() {
-              currentUser.logIn(user);
-            });
-          }
-        }
-      });
-    }
+    // if (!currentUser.userExists()) {
+    //   FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    //     if (user != null) {
+    //       if (mounted) {
+    //         setState(() {
+    //           currentUser.logIn(user);
+    //         });
+    //       }
+    //     }
+    //   });
+    // }
     handleToken(); // firebase console connection confirmed
     initInfo();
   }
@@ -58,7 +61,7 @@ class _GateState extends State<Gate> {
       if (kDebugMode) {
         print("Device token is $token");
       }
-      if (currentUser.userExists()) {
+      if (currentUser.userLoggedIn()) {
         saveToken(token!, currentUser);
       } else {
         // user not logged in...
@@ -69,7 +72,7 @@ class _GateState extends State<Gate> {
   }
 
   void saveToken(String token, CurrentUser currentUser) async {
-    if (!currentUser.userExists()) return;
+    if (!currentUser.userLoggedIn()) return;
     final FirebaseDatabase fbdb = FirebaseDatabase.instance;
     String uid = currentUser.getUser()!.uid;
     DatabaseReference ref;
@@ -188,6 +191,7 @@ class _GateState extends State<Gate> {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) print("Starting to build Gate");
     if (kIsWeb) {
       // TODO web environment, handle token for notifications?
     }

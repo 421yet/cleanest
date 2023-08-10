@@ -135,10 +135,23 @@ class _CheckPickupDateState extends State<CheckPickupDate> {
                                                       if (checked) {
                                                         ref.update({uid: true});
 
-                                                        FirebaseDatabase
-                                                            .instance
-                                                            .ref('Sonnims')
-                                                            .child(uid)
+                                                        DatabaseReference
+                                                            sonRef =
+                                                            FirebaseDatabase
+                                                                .instance
+                                                                .ref('Sonnims')
+                                                                .child(uid);
+
+                                                        sonRef
+                                                            .child("requests")
+                                                            .update({
+                                                          widget.date
+                                                              .toString()
+                                                              .split(
+                                                                  ' ')[0]: true
+                                                        });
+
+                                                        sonRef
                                                             .child('token')
                                                             .once(
                                                                 DatabaseEventType

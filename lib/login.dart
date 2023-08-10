@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pinput/pinput.dart';
@@ -16,11 +19,11 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   late String pin = '';
-  final CurrentUser currentUser = CurrentUser.vacant();
+  final CurrentUser currentUser = const CurrentUser();
 
   @override
   Widget build(context) {
-    if (currentUser.userExists()) {
+    if (currentUser.userLoggedIn()) {
       return const Gate();
     }
     return Scaffold(
@@ -50,6 +53,7 @@ class _LoginState extends State<Login> {
               child: SizedBox(
                 // width: 250,
                 child: Pinput(
+                  // length: 10, // TODO full phone number sign in exclusively
                   onCompleted: (pin) {
                     if (mounted) {
                       setState(() {
@@ -118,6 +122,23 @@ class _LoginState extends State<Login> {
                   : null,
               child: const Text("Sign In"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AlertDialog(
+                          title: Column(
+                        children: [
+                          TextField(),
+                          Text(
+                              "If using this method, you might reveive an SMS for message for verification and standard rates apply."),
+                        ],
+                      ));
+                    });
+              },
+              child: const Center(child: Text("Sign in via Text Message")),
+            )
           ],
         ),
       ), // on submit, pop navigator

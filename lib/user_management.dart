@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sunshine_cleanest/current_user.dart';
@@ -16,21 +18,30 @@ class UserManagement {
     return true;
   }
 
-  Future<String?> authenticate() async {
+  Future<String> authenticate() async {
     if (!validate()) {
-      return null;
+      throw Exception("Something is very wrong here");
     }
+
+    StreamSubscription<User?> sub = currentUser.logIn();
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: "$_last4digits@sunshine.com",
-        password: "000000", // street number
+        password: "000000", // TODO street number
       );
-      if (kDebugMode) {
-        print(
-            "LOGIN.DART (UserManagement.authenticate): Successful login by ${credential.user?.uid}");
+      if (currentUser.getUser() == credential.user) {
+        if (kDebugMode) {
+          print(
+              "LOGIN.DART (UserManagement.authenticate): Successful login by ${credential.user?.uid}");
+        }
+        // TODO auth change steam subscription... never cancel?
+        // Future<void> subOffSuccess = sub.cancel();
+        // if (kDebugMode) {
+        //   subOffSuccess.then((void value) =>
+        //       print("Subscription to Auth Stream properly cancelled."));
+        // }
+        return 'success';
       }
-      currentUser.logIn(credential.user!);
-      return 'success';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return _last4digits;
@@ -39,32 +50,34 @@ class UserManagement {
         throw Exception(// change these to print when debugging offline
             "Couldn't sign in (timeout or request failed): ${e.code}");
       } // something to the effect of: no connection
+      // else if (e.code == 'wrong-password') {
+      //   // TODO handle "wrong passwrod" scenarios
+      // }
       else {
         throw Exception("Couldn't sign in (?): ${e.code}");
       }
-      // if (e.code == 'wrong-password') {
-      //   print('Wrong password provided for that customer.');
-      // }
     }
-  }
 
-  // Future<UserCredential?> createAccount(
-  //     String last4digits, String password) async {
-  //   try {
-  //     final credential =
-  //         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //       email: "$last4digits@gmail.com",
-  //       password: "000000",
-  //     );
-  //     return credential;
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'email-already-in-use') {
-  //       print('The account already exists for that email.');
-  //     }
-  //     return null;
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
+    return 'failure';
+  }
 }
+
+// Future<UserCredential?> createAccount(
+//     String last4digits, String password) async {
+//   try {
+//     final credential =
+//         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+//       email: "$last4digits@gmail.com",
+//       password: "000000",
+//     );
+//     return credential;
+//   } on FirebaseAuthException catch (e) {
+//     if (e.code == 'email-already-in-use') {
+//       print('The account already exists for that email.');
+//     }
+//     return null;
+//   } catch (e) {
+//     print(e);
+//     return null;
+//   }
+// }

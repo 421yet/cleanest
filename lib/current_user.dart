@@ -1,21 +1,20 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 
 class CurrentUser {
-  static User? _user;
+  static User? _user = FirebaseAuth.instance.currentUser;
   // ValueKey<User?> _loggedOut = const ValueKey(null);
   static String _userName = 'Sunshine';
 
-  CurrentUser();
-  CurrentUser.vacant() {
-    _user = null;
-  }
+  const CurrentUser();
 
-  bool userExists() {
-    return _user != null;
+  bool userLoggedIn() {
+    return FirebaseAuth.instance.currentUser != null;
   }
 
   User? getUser() {
@@ -23,7 +22,7 @@ class CurrentUser {
   }
 
   Future<String> getAddress() async {
-    if (!userExists()) {
+    if (!userLoggedIn()) {
       throw Exception("User doesn't exist (internal)");
     }
     try {
@@ -38,7 +37,7 @@ class CurrentUser {
   }
 
   Future<String> getName() async {
-    if (userExists() && _userName == 'Sunshine') {
+    if (userLoggedIn() && _userName == 'Sunshine') {
       try {
         final DatabaseEvent event = await FirebaseDatabase.instance
             .ref('Sonnims')
@@ -53,29 +52,39 @@ class CurrentUser {
     return _userName;
   }
 
-  void logIn(User? newUser) {
-    if (userExists()) {
-      if (newUser == _user) {
-        if (kDebugMode) {
-          print("LOGIN Warning (current_user.dart): already logged in");
-        }
+  StreamSubscription<User?> logIn() {
+    if (_user != null) {
+      throw Exception("Sonnim already logged in.");
+    }
+    StreamSubscription<User?> userAuthStreamSub =
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      _user = user;
+      if (user != null) {
+        FirebaseDatabase.instance
+            .ref('Sonnims')
+            .child(user.uid)
+            .child('name')
+            .once()
+            .then((value) => _userName = value as String);
       }
-      return;
-    }
-    if (newUser == null) {
-      throw Exception("LOGIN ERROR (current_user.dart): newUser null");
-    }
-    _user = newUser;
+      // TODO: Could user auth state changes when not explicitly logging in/out?
+    });
+
+    return userAuthStreamSub;
   }
 
   void logOut() {
-    // TODO do FirebaseAuth.instance.signOut(); here?
-
-    if (!userExists()) {
-      // ignore: avoid_print
-      print("LOGOUT Warning (current_user.dart): no user to log out");
+    if (_user == null) {
+      throw Exception("Sonnim already logged out.");
     }
-    _user = null;
+    StreamSubscription<User?> streamSubscription =
+        FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        throw Exception("Sonnim couldn't log out via FirebaseAuth.");
+      }
+      _user = null;
+    });
+    FirebaseAuth.instance.signOut();
     _userName = 'Sunshine';
   }
 }

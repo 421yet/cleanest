@@ -74,6 +74,7 @@ class _CheckRequestsState extends State<CheckRequests> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: _requests.length,
+                  reverse: true,
                   itemBuilder: (BuildContext context, int index) {
                     DateTime now = DateTime.now();
                     DateTime nowDate = DateTime(now.year, now.month, now.day);

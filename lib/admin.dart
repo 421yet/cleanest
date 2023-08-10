@@ -27,7 +27,7 @@ class _AdminState extends State<Admin> {
 
   @override
   Widget build(BuildContext context) {
-    if (!currentUser.userExists()) {
+    if (!currentUser.userLoggedIn()) {
       return const Gate();
     }
     return Scaffold(
@@ -44,11 +44,13 @@ class _AdminState extends State<Admin> {
       drawer: SunshineDrawer(
         context,
         currentUser,
-        onResult: (CurrentUser currentUser) {
-          setState(() {
-            currentUser.logOut();
-          });
-        },
+        // onResult: (bool shouldLogOut) {
+        //   setState(() {
+        //     if (shouldLogOut) {
+        //       currentUser.logOut();
+        //     }
+        //   });
+        // },
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -120,6 +122,7 @@ class _AdminState extends State<Admin> {
                                     fontSize: 20,
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.center,
                               ),
                             ],
                           ),
@@ -133,6 +136,7 @@ class _AdminState extends State<Admin> {
                   GridTile(
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
                               elevation: 3,
                               side: BorderSide(color: DEFAULT_BGwHILITE)),
                           onPressed: () {
@@ -151,7 +155,7 @@ class _AdminState extends State<Admin> {
                                     size: 30,
                                   ),
                                 ),
-                                Text("View Notifications",
+                                Text("Notifications",
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontStyle: FontStyle.italic,

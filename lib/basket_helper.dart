@@ -92,11 +92,7 @@ Future<AlertDialog> _checknWrite(
     } // request already exists
   } // date is already populated
   DatabaseEvent sonnimDateEvent = await sonnimDateRef.child('request').once();
-  String prevSonnimDate = sonnimDateEvent.snapshot.value as String;
-
-  if (prevSonnimDate.isEmpty || dateString.compareTo(prevSonnimDate) < 0) {
-    await sonnimDateRef.update({'request': dateString});
-  }
+  await sonnimDateRef.child("requests").update({dateString: false});
   await preRef.update({uid: false});
 
   // now checking if DB actually updated . . .
@@ -211,77 +207,80 @@ Future<void> confirmDays(BuildContext context, CurrentUser currentUser) async {
                       if (day == today)
                         const Text("Setting up a pick-up request for today")
                       else
-                        Column(mainAxisSize: MainAxisSize.min, children: <
-                            Widget>[
-                          const Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                                "Please confirm the date\nfor your Pick-Up Request"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, top: 8),
-                            child: Text(
-                              day,
-                              style: const TextStyle(fontSize: 30),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8, right: 8, bottom: 8),
-                            child: Text(
-                              thenString,
-                              style: const TextStyle(fontSize: 22),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: TextButton(
-                              onPressed: () {
-                                // flutter DatePickerDialog
-                                DateTime today = DateTime.now();
+                        Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                    "Please confirm the date\nfor your Pick-Up Request"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, right: 8, top: 8),
+                                child: Text(
+                                  day,
+                                  style: const TextStyle(fontSize: 30),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, right: 8, bottom: 8),
+                                child: Text(
+                                  thenString,
+                                  style: const TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: TextButton(
+                                  onPressed: () {
+                                    // flutter DatePickerDialog
+                                    DateTime today = DateTime.now();
 
-                                // flutter ListWheelScrollView
-                                List<Text> candiDays = [];
-                                for (int index = 1;
-                                    index < 30;
-                                    index = index + 1) {
-                                  DateTime day = DateTime(
-                                      then.year, then.month, then.day + index);
-                                  if (days.contains(
-                                      DateFormat('EEEE').format(day))) {
-                                    candiDays.add(Text(
-                                        "${DateFormat('EEEE').format(day)}\n${DateFormat('yMMMMd').format(day)}"));
-                                  }
-                                }
-                                Future<DateTime?> newDateFuture =
-                                    showDatePicker(
-                                  context: context,
-                                  initialDate: then,
-                                  firstDate: then,
-                                  lastDate: DateTime(
-                                      today.year, today.month, today.day + 30),
-                                  currentDate: today,
-                                  selectableDayPredicate: (DateTime day) => days
-                                      .contains(DateFormat('EEEE').format(day)),
-                                  errorInvalidText:
-                                      "This date is neither ${days[0]} nor ${days[1]}.",
-                                );
-                                newDateFuture.then((DateTime? newDate) {
-                                  if (newDate != null) {
-                                    setState(() {
-                                      then = newDate;
-                                      thenString =
-                                          DateFormat('yMMMMd').format(newDate);
-                                      day = DateFormat('EEEE').format(newDate);
+                                    // flutter ListWheelScrollView
+                                    List<Text> candiDays = [];
+                                    for (int index = 1;
+                                        index < 30;
+                                        index = index + 1) {
+                                      DateTime day = DateTime(then.year,
+                                          then.month, then.day + index);
+                                      if (days.contains(
+                                          DateFormat('EEEE').format(day))) {
+                                        candiDays.add(Text(
+                                            "${DateFormat('EEEE').format(day)}\n${DateFormat('yMMMMd').format(day)}"));
+                                      }
+                                    }
+                                    Future<DateTime?> newDateFuture =
+                                        showDatePicker(
+                                      context: context,
+                                      initialDate: then,
+                                      firstDate: then,
+                                      lastDate: DateTime(today.year,
+                                          today.month, today.day + 30),
+                                      currentDate: today,
+                                      selectableDayPredicate: (DateTime day) =>
+                                          days.contains(
+                                              DateFormat('EEEE').format(day)),
+                                      errorInvalidText:
+                                          "This date is neither ${days[0]} nor ${days[1]}.",
+                                    );
+                                    newDateFuture.then((DateTime? newDate) {
+                                      if (newDate != null) {
+                                        setState(() {
+                                          then = newDate;
+                                          thenString = DateFormat('yMMMMd')
+                                              .format(newDate);
+                                          day = DateFormat('EEEE')
+                                              .format(newDate);
+                                        });
+                                      }
                                     });
-                                  }
-                                });
-                              },
-                              child: const Text("Select another date"),
-                            ),
-                          )
-                        ])
+                                  },
+                                  child: const Text("Select another date"),
+                                ),
+                              )
+                            ])
                     ])),
             actions: <Widget>[
               Row(children: <Widget>[

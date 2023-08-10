@@ -9,11 +9,14 @@ import 'current_user.dart';
 class SunshineDrawer extends StatefulWidget {
   final BuildContext context;
   final CurrentUser currentUser;
-  final void Function(CurrentUser) onResult;
+  // final void Function(bool) onResult;
 
-  const SunshineDrawer(this.context, this.currentUser,
-      {Key? key, required this.onResult})
-      : super(key: key);
+  const SunshineDrawer(
+    this.context,
+    this.currentUser, {
+    Key? key,
+    /*required this.onResult*/
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SunshineDrawerState();
@@ -34,7 +37,7 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
 
     final List<Widget> entries = <Widget>[
       DrawerHeader(
-        child: (widget.currentUser.userExists())
+        child: (widget.currentUser.userLoggedIn())
             ? const Text("Cleanest\u2122\nfor\nSunshine Cleaners\n\nv. 1.0.0")
             : ElevatedButton(
                 onPressed: () async {
@@ -77,7 +80,7 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
         },
         child: const Text("About"),
       ),
-      if (widget.currentUser.userExists())
+      if (widget.currentUser.userLoggedIn())
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 2,
@@ -85,11 +88,10 @@ class _SunshineDrawerState extends State<SunshineDrawer> {
           ),
           onPressed: () {
             setState(() {
-              FirebaseAuth.instance.signOut();
-              widget.currentUser.logOut();
+              widget.currentUser.logOut(); // redundant?
             });
-            widget.onResult(widget.currentUser);
-            Navigator.pop(context, widget.currentUser);
+            // widget.onResult(true);
+            Navigator.pop(context);
           },
           child: const Text(
             "Sign Out",

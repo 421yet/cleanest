@@ -18,7 +18,7 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     List<Widget> entries = [
       OutlinedButton(
-        onPressed: (currentUser.userExists())
+        onPressed: (currentUser.userLoggedIn())
             ? () {
                 // TODO: Implement Change Dates Function
               }
@@ -26,7 +26,7 @@ class _AccountState extends State<Account> {
         child: const Text("Change Pick-Up Dates"),
       ),
       OutlinedButton(
-        onPressed: (currentUser.userExists())
+        onPressed: (currentUser.userLoggedIn())
             ? () {
                 // TODO: Implement Change Address Function
                 // Navigator.push()...
